@@ -1,0 +1,3 @@
+rootProject.name = "MaxDRX"
+include ':app'
+include ':imageops'

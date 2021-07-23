@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorAccent"
+    tools:context=".views.FragTools">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <SeekBar
+        android:id="@+id/tool_seekbar1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:progressDrawable="@drawable/prgrs_t"
+        android:thumb="@drawable/thmb1"
+        app:layout_constraintEnd_toStartOf="@+id/tools_apply"
+        app:layout_constraintStart_toEndOf="@+id/rcyclr_tool_slct"
+        app:layout_constraintTop_toTopOf="@+id/tools_apply" />
+
+    <SeekBar
+        android:id="@+id/tool_seekbar2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:progressDrawable="@drawable/prgrs_t"
+        android:thumb="@drawable/thmb1"
+        app:layout_constraintBottom_toBottomOf="@+id/tools_apply"
+        app:layout_constraintEnd_toEndOf="@+id/tool_seekbar1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/rcyclr_tool_slct"
+        app:layout_constraintStart_toStartOf="@+id/tool_seekbar1"
+        app:layout_constraintTop_toBottomOf="@+id/tool_seekbar1" />
+
+    <Button
+        android:id="@+id/tools_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:text="Apply"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/tools_up"
+        app:layout_constraintEnd_toStartOf="@+id/tools_up"
+        app:layout_constraintTop_toTopOf="@+id/tools_up" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcyclr_tool_slct"
+        android:layout_width="280dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/tool_seekbar2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tool_seekbar1"
+        tools:layout="@layout/item_tool_slct" />
+
+    <TextView
+        android:id="@+id/tools_up"
+        android:layout_width="42dp"
+        android:layout_height="45dp"
+        android:background="@android:color/black"
+        android:foreground="@drawable/ic_baseline_unfold_more_24"
+        android:gravity="center"
+        android:rotation="90"
+        android:scaleY=".8"
+        android:text="   "
+        android:textAlignment="center"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
