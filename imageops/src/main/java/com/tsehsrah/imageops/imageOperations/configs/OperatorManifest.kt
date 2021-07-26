@@ -11,7 +11,8 @@ import com.tsehsrah.imageops.imageOperations.operators.implementations.MultiExpo
 enum class ImageOperators(val operator: IOperatorDescription) {
     DynamicRange(OperatorDescription(
         "Dynamic Range",
-        "Redefine the dynamic range to bring forward the details that makes the difference.",
+        "Redefine the dynamic range by stretching the specified region into maximum" +
+                " available range to bring forward the details that makes the difference.",
         false)
     ),
     Binary(OperatorDescription(
