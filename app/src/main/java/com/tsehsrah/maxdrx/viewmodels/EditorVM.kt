@@ -13,8 +13,6 @@ import com.tsehsrah.imageops.imageOperations.configs.ReferenceModes
 import com.tsehsrah.imageops.imageOperations.models.*
 
 import com.tsehsrah.imageops.imageOperations.operators.IImageOperator
-import com.tsehsrah.maxdrx.EventAt
-import com.tsehsrah.maxdrx.FBEvent
 
 import com.tsehsrah.maxdrx.R
 import com.tsehsrah.maxdrx.configs.CONSTANTS.BLANK
@@ -27,6 +25,8 @@ import com.tsehsrah.maxdrx.configs.CONSTANTS.PREVIEW_QUALITY_REDUCTION_RATIO
 import com.tsehsrah.maxdrx.configs.CONSTANTS.RENDERING_MAX_TIME
 import com.tsehsrah.maxdrx.configs.CONSTANTS.RENDERING_MIN_TIME
 import com.tsehsrah.maxdrx.configs.CONSTANTS.RENDERING_TIME_ANOMALY_COUNT_THRESHOLD
+import com.tsehsrah.maxdrx.configs.EventAt
+import com.tsehsrah.maxdrx.configs.FBEvent
 import com.tsehsrah.maxdrx.configs.ImageLayers
 
 import com.tsehsrah.maxdrx.di.IServiceLocator
@@ -342,7 +342,7 @@ class EditorVM @Inject constructor(application: Application,
         if(autoPreview){
             decPreviewQuality()
         }
-        sL.getAnalytics().logEvent(FBEvent.OOM,description = description,at=EventAt.EDITOR_VM)
+        sL.getAnalytics().logEvent(FBEvent.OOM,description = description,at= EventAt.EDITOR_VM)
     }
     private fun evaluateRenderingTime(t:Int){
         when(t) {
