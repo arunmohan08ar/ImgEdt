@@ -13,6 +13,8 @@ import com.tsehsrah.imageops.imageOperations.configs.ReferenceModes
 import com.tsehsrah.imageops.imageOperations.models.*
 
 import com.tsehsrah.imageops.imageOperations.operators.IImageOperator
+import com.tsehsrah.maxdrx.EventAt
+import com.tsehsrah.maxdrx.FBEvent
 
 import com.tsehsrah.maxdrx.R
 import com.tsehsrah.maxdrx.configs.CONSTANTS.BLANK
@@ -123,7 +125,7 @@ class EditorVM @Inject constructor(application: Application,
                     try {
                         opParams.resetRendered(previewQuality)
                     }catch (oom:OutOfMemoryError){
-                        //todo manage
+                        sL.getAnalytics().logEvent(FBEvent.OOM,id="bmp",description = oom.toString())
                     }
                     operator.refresh()
                     _rendered.value = opParams.rendered
@@ -207,7 +209,7 @@ class EditorVM @Inject constructor(application: Application,
                                 null
                             )
                         }catch (io:IOException){
-                            //todo manage io
+                            sL.getAnalytics().logEvent(FBEvent.IOException)
                         }
                     }
                 }
@@ -255,7 +257,7 @@ class EditorVM @Inject constructor(application: Application,
                                 format
                             )
                         }catch (io:IOException){
-                            //todo manage io
+                            sL.getAnalytics().logEvent(FBEvent.IOException)
                         }
                         _userHeadsUpString.postValue(
                             getApplication<Application>().applicationContext
@@ -323,7 +325,7 @@ class EditorVM @Inject constructor(application: Application,
         try {
             operator.perform(opParams)
         }catch (e:Exception){
-            handleOOM()
+            handleOOM("process")
         }
         decProcessCount()
     }
@@ -334,12 +336,13 @@ class EditorVM @Inject constructor(application: Application,
     private fun decProcessCount(){
         _loadingStatus.value= processCount.decrementAndGet()
     }
-    private fun handleOOM(){
+    private fun handleOOM(description:String){
         _userHeadsUpString.postValue(getApplication<Application>().applicationContext
             .getString(R.string.something_wrong))
         if(autoPreview){
             decPreviewQuality()
         }
+        sL.getAnalytics().logEvent(FBEvent.OOM,description = description,at=EventAt.EDITOR_VM)
     }
     private fun evaluateRenderingTime(t:Int){
         when(t) {
@@ -385,7 +388,7 @@ class EditorVM @Inject constructor(application: Application,
         try {
             imgRepo.setSecondary(getApplication<Application>().applicationContext,null)
         }catch (oom:OutOfMemoryError){
-            handleOOM()
+            handleOOM("sec")
         }
     }
 
@@ -393,13 +396,13 @@ class EditorVM @Inject constructor(application: Application,
         try{
             imgRepo.setReference(getApplication<Application>().applicationContext,null)
         }catch (oom:OutOfMemoryError){
-            handleOOM()
+            handleOOM("ref")
         }
     }
 
     override fun exceptionNotifier(e: Exception?, vme: VirtualMachineError?, s: String?) {
         if(vme!=null){
-            handleOOM()
+            handleOOM("from_process")
         }
     }
 

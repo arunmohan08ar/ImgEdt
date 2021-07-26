@@ -6,6 +6,8 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.tsehsrah.maxdrx.EventAt
+import com.tsehsrah.maxdrx.FBEvent
 
 import com.tsehsrah.maxdrx.R
 import com.tsehsrah.maxdrx.configs.CONSTANTS.BLANK
@@ -88,9 +90,9 @@ class SelectorVM @Inject constructor(application: Application,
                 uri
             )
         }catch (oom:OutOfMemoryError){
-            //todo manage
+            handleOOM("new")
         }catch (io:IOException){
-            //todo manage
+            sL.getAnalytics().logEvent(FBEvent.IOException)
         }
     }
 
@@ -101,7 +103,7 @@ class SelectorVM @Inject constructor(application: Application,
                 _headsUpPreview.postValue(imageList[pos].thumpBmp)
             } ?: imgRepo.setCurrentPos(getApplication<Application>().applicationContext,null,false)
         }catch (oom:OutOfMemoryError){
-            //todo manage
+            handleOOM("setP")
         }
     }
 
@@ -113,7 +115,7 @@ class SelectorVM @Inject constructor(application: Application,
         try{
             imgRepo.setReference(getApplication<Application>().applicationContext, pos)
         }catch (oom:OutOfMemoryError){
-            //todo manage
+            handleOOM("setR")
         }
         _headsUpReference.postValue(imageList[pos].thumpBmp)
     }
@@ -121,7 +123,7 @@ class SelectorVM @Inject constructor(application: Application,
         try{
             imgRepo.setSecondary(getApplication<Application>().applicationContext,pos)
         }catch (oom:OutOfMemoryError){
-            //todo manage
+            handleOOM("setS")
         }
         _headsUpSecondary.postValue(imageList[pos].thumpBmp)
     }
@@ -136,7 +138,7 @@ class SelectorVM @Inject constructor(application: Application,
                 )
                 val itm = getSelectListItem(
                     bmp,
-                    BLANK
+                    "$at"
                 )
                 if (at == imageList.size) {
                     imageList.add(itm)
@@ -144,7 +146,7 @@ class SelectorVM @Inject constructor(application: Application,
                     imageList[at] = itm
                 }
             }catch (oom:OutOfMemoryError){
-            //todo manage
+                handleOOM("Updt_lst")
             }
             updateAndForceReload()
         }
@@ -159,7 +161,7 @@ class SelectorVM @Inject constructor(application: Application,
                 forceReload = true
             )
         }catch (oom:OutOfMemoryError){
-            //todo manage
+            handleOOM("U_FR")
         }
     }
 
@@ -194,13 +196,14 @@ class SelectorVM @Inject constructor(application: Application,
                             true
                         )
                     } catch (oom: OutOfMemoryError) {
-                        //todo manage
+                        handleOOM("del")
+
                     }
                 }
                 updateAndForceReload()
             }
         }catch (io:IOException){
-            //todo manage io
+            sL.getAnalytics().logEvent(FBEvent.IOException,description="del")
         }
     }
 
@@ -208,13 +211,16 @@ class SelectorVM @Inject constructor(application: Application,
         try{
             imgRepo.clearAllWorkData(getApplication<Application>().applicationContext)
         }catch (io:IOException){
-            //todo manage io
+            sL.getAnalytics().logEvent(FBEvent.OOM,description="clr",at = EventAt.SELECTOR_VM)
         }
         expectAt=0
         imageList.clear()
         _imageSelectList.postValue(imageList)
     }
 
+    private fun handleOOM(description:String){
+        sL.getAnalytics().logEvent(FBEvent.OOM,description=description,at=EventAt.SELECTOR_VM)
+    }
 
     companion object{
         private var expectAt:Int=0

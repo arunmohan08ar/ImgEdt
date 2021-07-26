@@ -2,6 +2,8 @@ package com.tsehsrah.maxdrx.di
 
 import com.tsehsrah.imageops.imageOperations.di.ServiceLocator
 import com.tsehsrah.imageops.imageOperations.models.*
+import com.tsehsrah.maxdrx.AdsManager
+import com.tsehsrah.maxdrx.Analytics
 import com.tsehsrah.maxdrx.models.*
 import com.tsehsrah.maxdrx.utilities.*
 
@@ -33,6 +35,11 @@ object ServiceLocator :IServiceLocator{
     override fun getNewOperationParameters(manager: IOperationManager)
                                                      : IOperationParameters  = ServiceLocator
                                                                         .getNewOperationParameters(manager)
+
+
+    //
+    override fun getAdsManager():AdsManager =AdsManager
+    override fun getAnalytics(): Analytics =Analytics
 
 
 }

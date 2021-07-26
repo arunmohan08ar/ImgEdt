@@ -28,6 +28,8 @@ import com.tsehsrah.maxdrx.configs.CONSTANTS.PREF_AUTO_SWITCH
 import com.tsehsrah.maxdrx.configs.CONSTANTS.PREF_IMAGE_FORMAT
 import com.tsehsrah.maxdrx.configs.CONSTANTS.PREF_PREV_QUALITY
 import com.tsehsrah.maxdrx.configs.CONSTANTS.PREF_SETTINGS
+import com.tsehsrah.maxdrx.configs.EventAt
+import com.tsehsrah.maxdrx.configs.FBEvent
 import com.tsehsrah.maxdrx.configs.ImageFormats
 import com.tsehsrah.maxdrx.di.IServiceLocator
 import com.tsehsrah.maxdrx.utilities.IImageSelectUtility
@@ -64,11 +66,11 @@ class EditorActivity : AppCompatActivity() {
                 }
             }
         }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_act_edtr)
         supportFragmentManager.fragmentFactory=fragFactory
-
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             replace(TOOL_FRAG,ToolsFragment::class.java,null)
@@ -76,8 +78,10 @@ class EditorActivity : AppCompatActivity() {
             replace(IMGS_FRAG,ImageSelectFragment::class.java,null)
             replace(HEADSUP_FRAG,HeadsUpFragment::class.java,null)
         }
-
         observe()
+        sL.getAnalytics().initAnalytics(this)
+        sL.getAdsManager().initAds(this)
+
     }
 
     private fun observe(){
@@ -112,7 +116,11 @@ class EditorActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(sL.getAdsManager().display(this)){
+            return super.onOptionsItemSelected(item)
+        }
         when(item.itemId){
             SVE_BTN     ->  editorVM.requestImageSave(when(getSharedPreferences(PREF_SETTINGS,
                 MODE_PRIVATE)
@@ -133,6 +141,7 @@ class EditorActivity : AppCompatActivity() {
             Toast.makeText(this,getText(R.string.please_wait),LENGTH_SHORT).show()
         }else{
             selectorVM.setExpectNewFile()
+            sL.getAnalytics().logEvent(FBEvent.NEW_FILE,at= EventAt.EDITOR_ACT)
         }
     }
 

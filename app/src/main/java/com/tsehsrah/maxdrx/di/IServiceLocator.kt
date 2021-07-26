@@ -1,6 +1,8 @@
 package com.tsehsrah.maxdrx.di
 
 import com.tsehsrah.imageops.imageOperations.models.*
+import com.tsehsrah.maxdrx.AdsManager
+import com.tsehsrah.maxdrx.Analytics
 import com.tsehsrah.maxdrx.models.*
 import com.tsehsrah.maxdrx.utilities.*
 
@@ -26,6 +28,10 @@ interface IServiceLocator {
     fun getNewOperationParameters(manager: IOperationManager)
                                               : IOperationParameters
 
+
+    //
+    fun getAdsManager()                       : AdsManager
+    fun getAnalytics()                        : Analytics
 
 
 }
