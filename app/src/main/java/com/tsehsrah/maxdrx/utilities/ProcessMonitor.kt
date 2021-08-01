@@ -17,4 +17,9 @@ object ProcessMonitor : IProcessMonitor{
         return (sum+v)/(l.size+1)
     }
 
+    override fun reset() {
+        l.clear()
+        count=0
+    }
+
 }

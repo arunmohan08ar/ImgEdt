@@ -12,13 +12,13 @@ interface IImageSelectUtility{
 }
 
 interface IImageUtilities {
-    fun getImgRto(
+    fun getImageRatio(
         w: Int,
         h: Int,
         toVal: Int,
-        scle: Float
+        scale: Float
     ): Float
-    fun calculateXYtoAngle(
+    fun calculateDiffXYtoAngle(
         x:Int,
         y:Int,
         ang:Double,
@@ -26,6 +26,7 @@ interface IImageUtilities {
     ):Pair<Int,Int>
 
     fun angleBetweenLines(
+        ratio:Int,
         fX: Float,
         fY: Float,
         sX: Float,
@@ -54,4 +55,5 @@ interface IImageFileUtilities{
 interface IProcessMonitor{
     var count:Int
     fun updateTime(v:Int):Int
+    fun reset()
 }

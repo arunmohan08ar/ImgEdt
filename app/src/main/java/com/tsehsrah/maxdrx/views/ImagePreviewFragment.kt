@@ -164,7 +164,7 @@ class ImagePreviewFragment  : Fragment(R.layout.fragment_image_preview) {
                     distanceY   : Float
                 ): Boolean {
                     if(gestureStatus.pan) {
-                        val values = imgUtils.calculateXYtoAngle(
+                        val values = imgUtils.calculateDiffXYtoAngle(
                             distanceX.toInt(),
                             distanceY.toInt(),
                             previewAngle.toDouble(),
@@ -205,7 +205,7 @@ class ImagePreviewFragment  : Fragment(R.layout.fragment_image_preview) {
                 val nsY: Float = event.getY(event.findPointerIndex(ptrID1))
                 val nfX: Float = event.getX(event.findPointerIndex(ptrID2))
                 val nfY: Float = event.getY(event.findPointerIndex(ptrID2))
-                val dAng=(.05f*imgUtils.angleBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY))
+                val dAng=(.05f*imgUtils.angleBetweenLines(2,fX, fY, sX, sY, nfX, nfY, nsX, nsY))
 
                 val sin1    = sin(Math.toRadians(parameters.angle.toDouble()))
                 val cos1    = cos(Math.toRadians(parameters.angle.toDouble()))
@@ -219,7 +219,7 @@ class ImagePreviewFragment  : Fragment(R.layout.fragment_image_preview) {
                 val sin2    =sin(Math.toRadians(parameters.angle.toDouble()))
                 val cos2    =cos(Math.toRadians(parameters.angle.toDouble()))
 
-                val values=imgUtils.calculateXYtoAngle(
+                val values=imgUtils.calculateDiffXYtoAngle(
                     ((sin2-sin1) * (parameters.scrollY+fY-sY)).toInt(),
                     ((cos2-cos1) * (parameters.scrollX+fX-sX)).toInt(),
                     parameters.angle.toDouble(),

@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class ImageRepo constructor(private val sL:IServiceLocator) : IImageRepository  {
 
-    private val fileUtils:IImageFileUtilities = sL.getImageFileUtilities()
+    private val fileUtils   : IImageFileUtilities   = sL.getImageFileUtilities()
 
     private var exposedPos  : Int                   = 0
     private var referencePos: Int?                  = null
@@ -113,7 +113,7 @@ class ImageRepo constructor(private val sL:IServiceLocator) : IImageRepository  
                 async {
                     incRunningProcessCount()
                     val rto=sL.getImageUtilities()
-                        .getImgRto(bmp.width,bmp.height,IMAGE_SELECT_THUMP_SIZE,1f)
+                        .getImageRatio(bmp.width,bmp.height,IMAGE_SELECT_THUMP_SIZE,1f)
                     fileUtils.saveWorkBmp(
                         Bitmap.createScaledBitmap(
                             bmp,
