@@ -5,7 +5,8 @@ import com.tsehsrah.imageops.imageOperations.configs.CONSTANTS.DEFAULT_FREE_CORE
 import com.tsehsrah.imageops.imageOperations.configs.CONSTANTS.DEFAULT_IMAGE_PARAMS
 import com.tsehsrah.imageops.imageOperations.configs.CONSTANTS.DEFAULT_RENDER_QUALITY
 import com.tsehsrah.imageops.imageOperations.configs.ReferenceModes
-import com.tsehsrah.imageops.imageOperations.utilities.BitmapUtils
+import com.tsehsrah.imageops.imageOperations.dependancymanagement.ServiceLocator
+import com.tsehsrah.imageops.imageOperations.utilities.IBitmapUtilities
 
 class OperationParameters(
     override val manager: IOperationManager,
@@ -22,6 +23,7 @@ class OperationParameters(
 
 ) : IOperationParameters {
     private var renderCache      : IImageCache?     = null
+    private val bitmapUtils      : IBitmapUtilities = ServiceLocator.getBitmapUtils()
 
     override fun setToolStatus(tool:IToolsStatus){
         this.tool=tool
@@ -49,7 +51,7 @@ class OperationParameters(
     override suspend fun finalize(quality:Float) {
         primaryBmp?.let {bmp->
             renderQuality   = quality
-            primaryBmp      = BitmapUtils.getScaledBmp(bmp,renderQuality)
+            primaryBmp      = bitmapUtils.getScaledBmp(bmp,renderQuality)
             rendered        = primaryBmp
         }
     }
@@ -62,7 +64,7 @@ class OperationParameters(
                 if (!cache.isValid(quality)) {
                     primaryBmp?.let { bmp ->
                         renderCache = ImageCache(quality = renderQuality).setBmp(
-                            BitmapUtils.getScaledBmp(
+                            bitmapUtils.getScaledBmp(
                                 bmp,
                                 renderQuality
                             )
@@ -72,7 +74,7 @@ class OperationParameters(
             } ?: let {
                 primaryBmp?.let { bmp ->
                     renderCache = ImageCache(quality = renderQuality).setBmp(
-                        BitmapUtils.getScaledBmp(
+                        bitmapUtils.getScaledBmp(
                             bmp,
                             renderQuality
                         )

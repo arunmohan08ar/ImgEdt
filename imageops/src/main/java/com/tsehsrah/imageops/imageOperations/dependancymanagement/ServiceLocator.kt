@@ -1,4 +1,4 @@
-package com.tsehsrah.imageops.imageOperations.di
+package com.tsehsrah.imageops.imageOperations.dependancymanagement
 
 import com.tsehsrah.imageops.imageOperations.configs.CONSTANTS
 import com.tsehsrah.imageops.imageOperations.models.*

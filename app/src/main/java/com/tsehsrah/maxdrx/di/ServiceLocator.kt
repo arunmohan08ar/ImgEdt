@@ -1,6 +1,6 @@
 package com.tsehsrah.maxdrx.di
 
-import com.tsehsrah.imageops.imageOperations.di.ServiceLocator
+import com.tsehsrah.imageops.imageOperations.dependancymanagement.ServiceLocator
 import com.tsehsrah.imageops.imageOperations.models.*
 import com.tsehsrah.maxdrx.AdsManager
 import com.tsehsrah.maxdrx.Analytics

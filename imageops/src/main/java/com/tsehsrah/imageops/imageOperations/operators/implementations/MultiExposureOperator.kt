@@ -1,7 +1,7 @@
 package com.tsehsrah.imageops.imageOperations.operators.implementations
 
 import com.tsehsrah.imageops.imageOperations.configs.ReferenceModes
-import com.tsehsrah.imageops.imageOperations.di.ServiceLocator
+import com.tsehsrah.imageops.imageOperations.dependancymanagement.ServiceLocator
 import com.tsehsrah.imageops.imageOperations.models.ICache
 import com.tsehsrah.imageops.imageOperations.models.IOperationParameters
 import com.tsehsrah.imageops.imageOperations.operators.IImageOperator

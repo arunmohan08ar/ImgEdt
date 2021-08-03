@@ -1,6 +1,6 @@
 package com.tsehsrah.imageops.imageOperations.operators.implementations
 
-import com.tsehsrah.imageops.imageOperations.di.ServiceLocator
+import com.tsehsrah.imageops.imageOperations.dependancymanagement.ServiceLocator
 import com.tsehsrah.imageops.imageOperations.models.IOperationParameters
 import com.tsehsrah.imageops.imageOperations.operators.IImageOperator
 import com.tsehsrah.imageops.imageOperations.utilities.ICPPFunctions

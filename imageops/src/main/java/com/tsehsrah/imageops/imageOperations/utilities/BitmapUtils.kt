@@ -55,15 +55,16 @@ object BitmapUtils : IBitmapUtilities{
                 params.renderQuality
             )
             Cache.sX = (params.secImgParams.scrollX
-                    *params.secImgParams.scale
+                    * params.secImgParams.scale
                     * params.renderQuality
                     ).toInt()
             Cache.sY = (params.secImgParams.scrollY
-                    *params.secImgParams.scale
+                    * params.secImgParams.scale
                     * params.renderQuality
                     ).toInt()
         }
     }
+
     private suspend fun getValidatedCache(
         cache   : IImageCache?,
         bmp     : Bitmap,

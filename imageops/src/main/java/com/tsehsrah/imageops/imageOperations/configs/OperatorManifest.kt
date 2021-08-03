@@ -12,7 +12,7 @@ enum class ImageOperators(val operator: IOperatorDescription) {
     DynamicRange(OperatorDescription(
         "Dynamic Range",
         "Redefine the dynamic range by stretching the specified region into maximum" +
-                " available range to bring forward the details that makes the difference.",
+                " available range to bring forward the contrast over what matters most.",
         false)
     ),
     Binary(OperatorDescription(

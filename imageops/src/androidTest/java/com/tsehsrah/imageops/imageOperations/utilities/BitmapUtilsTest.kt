@@ -18,17 +18,16 @@ import org.mockito.InjectMocks
 import org.mockito.MockitoAnnotations
 
 @RunWith(AndroidJUnit4::class)
-class BitmapUtilsTest2{
+class BitmapUtilsTest{
     private val size=50
-
     private lateinit var bmp: Bitmap
     private lateinit var params: IOperationParameters
 
     @InjectMocks
-    private val utilities: IBitmapUtilities = BitmapUtils
+    private val utilities : IBitmapUtilities = BitmapUtils
 
     @InjectMocks
-    private val manager: IOperationManager = FakeOperationsManager
+    private val manager :IOperationManager = FakeOperationsManager
 
     @InjectMocks
     private val cache: ICache =Cache
@@ -37,6 +36,8 @@ class BitmapUtilsTest2{
     fun setup(){
         MockitoAnnotations.initMocks(this)
         bmp=Bitmap.createBitmap(size,size,Bitmap.Config.ARGB_8888)
+        params=OperationParameters(manager)
+
     }
     @After
     fun tearDown(){
@@ -44,8 +45,10 @@ class BitmapUtilsTest2{
         cache.sec=null
     }
 
+    /***********************************************************************************************
+     * Scale test
+     **********************************************************************************************/
 
-    //scale
     @Test
     fun scaleTest(){
         val scale=3f
@@ -59,32 +62,27 @@ class BitmapUtilsTest2{
         Assert.assertEquals((size*scale).toInt(),rbmb.width)
     }
 
-    //reference cache validation
+    /***********************************************************************************************
+    *  reference cache validation
+    ***********************************************************************************************/
     @Test
     fun nonNullSetsRefCache(){
         cache.ref=null
-        params=OperationParameters(manager)
         params.referenceMode=ReferenceModes.INDEPENDENT
         params.referenceBmp=bmp
-        runBlocking {
-            utilities.validateRefCache(params)
-        }
+        validateRefCache()
         Assert.assertNotNull(cache.ref)
     }
     @Test
     fun nonNullSetsRefCacheBmp(){
         cache.ref=null
-        params=OperationParameters(manager)
         params.referenceMode=ReferenceModes.INDEPENDENT
         params.referenceBmp=bmp
-        runBlocking {
-            utilities.validateRefCache(params)
-        }
+        validateRefCache()
         Assert.assertNotNull(cache.ref?.getBmp())
     }
     @Test
     fun nonNullRefSetsXY(){
-        params=OperationParameters(manager)
         params.refImgParams.scale=2f
         params.refImgParams.scrollX=3
         params.refImgParams.scrollY=4
@@ -92,67 +90,119 @@ class BitmapUtilsTest2{
 
         params.referenceMode=ReferenceModes.INDEPENDENT
         params.referenceBmp=bmp
-        runBlocking {
-            utilities.validateRefCache(params)
-        }
+        validateRefCache()
         Assert.assertEquals(cache.rX,(2*3*5))
         Assert.assertEquals(cache.rY,(2*4*5))
     }
     @Test
     fun primaryModeRefSetsNullToCache(){
-        params=OperationParameters(manager)
         params.referenceMode=ReferenceModes.PRIMARY
-        runBlocking {
-            utilities.validateRefCache(params)
-        }
+        validateRefCache()
         Assert.assertEquals(cache.ref,null)
     }
     @Test
     fun secondaryModeRefSetsNullToCache(){
-        params=OperationParameters(manager)
         params.referenceMode=ReferenceModes.SECONDARY
+        validateRefCache()
+        Assert.assertEquals(cache.ref,null)
+    }
+    @Test
+    fun refCacheShouldValidateToSame(){
+        cache.ref=null
+        params.referenceMode=ReferenceModes.INDEPENDENT
+        params.referenceBmp=bmp
+        validateRefCache()
+        val expected=cache.ref?.getBmp()
+        params.referenceBmp=bmp.copy(bmp.config,false)
+        validateRefCache()
+        Assert.assertEquals(expected,cache.ref?.getBmp())
+    }
+
+    /**
+     * verify that cache gets replaced by change in parameter values.
+     * if any changed value invalidates and trigger update, invalidation causes update
+     * */
+    @Test
+    fun refCacheShouldBeUpdatedWithQuality(){
+        cache.ref=null
+        params.referenceMode=ReferenceModes.INDEPENDENT
+        params.referenceBmp=bmp
+        validateRefCache()
+        val expected=cache.ref?.getBmp()
+        params.renderQuality+=1
+        params.referenceBmp=bmp.copy(bmp.config,false)
+        validateRefCache()
+        Assert.assertNotEquals(expected,cache.ref?.getBmp())
+    }
+
+    private fun validateRefCache(){
         runBlocking {
             utilities.validateRefCache(params)
         }
-        Assert.assertEquals(cache.ref,null)
     }
 
 
-    //secondary cache validation
+    /***********************************************************************************************
+     * Secondary cache validation
+     **********************************************************************************************/
     @Test
     fun nonNullSetsSecCache(){
         cache.sec=null
-        params=OperationParameters(manager)
         params.secondaryBmp=bmp
-        runBlocking {
-            utilities.validateSecCache(params)
-        }
+        validateSecCache()
         Assert.assertNotNull(cache.sec)
     }
     @Test
     fun nonNullSetsSecCacheBmp(){
         cache.sec=null
-        params=OperationParameters(manager)
         params.secondaryBmp=bmp
-        runBlocking {
-            utilities.validateSecCache(params)
-        }
+        validateSecCache()
         Assert.assertNotNull(cache.sec?.getBmp())
     }
     @Test
     fun nonNullSecSetsXY(){
-        params=OperationParameters(manager)
         params.secImgParams.scale=2f
         params.secImgParams.scrollX=3
         params.secImgParams.scrollY=4
         params.renderQuality=5f
 
         params.secondaryBmp=bmp
-        runBlocking {
-            utilities.validateSecCache(params)
-        }
+        validateSecCache()
         Assert.assertEquals(cache.sX,(2*3*5))
         Assert.assertEquals(cache.sY,(2*4*5))
     }
+
+    @Test
+    fun secCacheShouldValidateToSame(){
+        cache.sec=null
+        params.secondaryBmp=bmp
+        validateSecCache()
+        val expected=cache.sec?.getBmp()
+        params.secondaryBmp=bmp.copy(bmp.config,false)
+        validateRefCache()
+        Assert.assertEquals(expected,cache.sec?.getBmp())
+    }
+
+    /**
+     * verify that cache gets replaced by change in parameter values.
+     * if any changed value invalidates and trigger update, invalidation causes update
+     * */
+    @Test
+    fun secCacheShouldBeUpdatedWithQuality(){
+        cache.sec=null
+        params.secondaryBmp=bmp
+        validateSecCache()
+        val expected=cache.sec?.getBmp()
+        params.renderQuality+=1
+        params.secondaryBmp=bmp.copy(bmp.config,false)
+        validateSecCache()
+        Assert.assertNotEquals(expected,cache.sec?.getBmp())
+    }
+    private fun validateSecCache(){
+        runBlocking {
+            utilities.validateSecCache(params)
+        }
+    }
+
 
 }
