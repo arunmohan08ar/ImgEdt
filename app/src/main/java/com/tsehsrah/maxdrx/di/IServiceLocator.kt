@@ -1,5 +1,8 @@
 package com.tsehsrah.maxdrx.di
 
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
+import com.tsehsrah.imageops.imageOperations.configs.IImageOperatorFactory
 import com.tsehsrah.imageops.imageOperations.models.*
 import com.tsehsrah.maxdrx.AdsManager
 import com.tsehsrah.maxdrx.Analytics
@@ -7,6 +10,9 @@ import com.tsehsrah.maxdrx.models.*
 import com.tsehsrah.maxdrx.utilities.*
 
 interface IServiceLocator {
+    //app
+    fun getAppContext(ctx:AndroidViewModel): Context
+
     //Local
     fun getItemImageSelectList()    : IItemImageSelectList
     fun getNewReferenceValues()     : IRefVal
@@ -21,6 +27,7 @@ interface IServiceLocator {
 
 
     //imageOps
+    fun getImageOperatorFactory()             : IImageOperatorFactory
     fun getNewImageParameters()               : IImageParameters
     fun getNewToolStatus()                    : IToolsStatus
     fun getToolStatusCopy(tool: IToolsStatus) : IToolsStatus

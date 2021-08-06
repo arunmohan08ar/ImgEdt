@@ -1,5 +1,10 @@
 package com.tsehsrah.maxdrx.di
 
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
+import com.tsehsrah.imageops.imageOperations.configs.IImageOperatorFactory
+import com.tsehsrah.imageops.imageOperations.configs.ImageOperatorFactory
 import com.tsehsrah.imageops.imageOperations.dependancymanagement.ServiceLocator
 import com.tsehsrah.imageops.imageOperations.models.*
 import com.tsehsrah.maxdrx.AdsManager
@@ -8,7 +13,9 @@ import com.tsehsrah.maxdrx.models.*
 import com.tsehsrah.maxdrx.utilities.*
 
 object ServiceLocator :IServiceLocator{
-
+    //app
+    override fun getAppContext(ctx:AndroidViewModel): Context        = ctx.getApplication<Application>()
+                                                                        .applicationContext
 
     //Local
     override fun getItemImageSelectList()    : IItemImageSelectList  = ItemImageSelectList()
@@ -24,6 +31,8 @@ object ServiceLocator :IServiceLocator{
 
 
     //imageOps
+    override fun getImageOperatorFactory()           : IImageOperatorFactory = ImageOperatorFactory
+
     override fun getNewImageParameters()             : IImageParameters      = ServiceLocator
                                                                         .getNewImageParameters()
     override fun getNewToolStatus()                  : IToolsStatus          = ServiceLocator

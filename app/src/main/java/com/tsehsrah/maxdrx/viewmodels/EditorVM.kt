@@ -187,7 +187,7 @@ class EditorVM @Inject constructor(application: Application,
 
     fun updateToolStatus(tool:IToolsStatus){
         if(toolsStatus.value.getMode()!=tool.getMode()){
-            operator=ImageOperatorFactory.getOperator(tool.getMode())
+            operator=sL.getImageOperatorFactory().getOperator(tool.getMode())
             operator.initOperator( opParams)
         }
         _toolsStatus.value=sL.getToolStatusCopy(tool)
@@ -204,7 +204,7 @@ class EditorVM @Inject constructor(application: Application,
                     opParams.primaryBmp?.let {
                         try {
                             imgRepo.sveWorkImage(
-                                getApplication<Application>().applicationContext,
+                                sL.getAppContext(this@EditorVM),
                                 it,
                                 null
                             )
@@ -215,7 +215,7 @@ class EditorVM @Inject constructor(application: Application,
                 }
                 _controlReset.postValue(Unit)
                 _userHeadsUpString.postValue(
-                    getApplication<Application>().applicationContext
+                    sL.getAppContext(this@EditorVM)
                          .getString(R.string.finished_in)
                             +"$time ms.")
                 decProcessCount()
@@ -253,28 +253,28 @@ class EditorVM @Inject constructor(application: Application,
                         try{
                             imgRepo.saveImageToGallery(
                                 it,
-                                getApplication<Application>().applicationContext,
+                                sL.getAppContext(this@EditorVM),
                                 format
                             )
                         }catch (io:IOException){
                             sL.getAnalytics().logEvent(FBEvent.IOException)
                         }
                         _userHeadsUpString.postValue(
-                            getApplication<Application>().applicationContext
+                            sL.getAppContext(this@EditorVM)
                                 .getString(R.string.save_success)
                         )
                     }?:let{
-                        _userHeadsUpString.postValue(getApplication<Application>().applicationContext
+                        _userHeadsUpString.postValue(sL.getAppContext(this@EditorVM)
                             .getString(R.string.something_wrong_on_file_save))
                     }
                     decProcessCount()
                 }
             }
         }else{
-            _userHeadsUpString.postValue(getApplication<Application>().applicationContext
+            _userHeadsUpString.postValue(sL.getAppContext(this@EditorVM)
                 .getString(R.string.please_wait_for)
                     +"${loadingStatus.value}"+
-                    getApplication<Application>().applicationContext
+                    sL.getAppContext(this@EditorVM)
                         .getString(R.string.processes))
         }
     }
@@ -284,8 +284,7 @@ class EditorVM @Inject constructor(application: Application,
         _rendered.value=null
     }
     fun updatePreferences(){
-        val sp:SharedPreferences=getApplication<Application>()
-            .applicationContext
+        val sp:SharedPreferences=sL.getAppContext(this)
             .getSharedPreferences(PREF_SETTINGS,Context.MODE_PRIVATE)
 
         previewQuality = (sp.getInt(PREF_PREV_QUALITY, (DEFAULT_PREVIEW_QUALITY*100).toInt())/100.0f)
@@ -337,7 +336,7 @@ class EditorVM @Inject constructor(application: Application,
         _loadingStatus.value= processCount.decrementAndGet()
     }
     private fun handleOOM(description:String){
-        _userHeadsUpString.postValue(getApplication<Application>().applicationContext
+        _userHeadsUpString.postValue(sL.getAppContext(this@EditorVM)
             .getString(R.string.something_wrong))
         if(autoPreview){
             decPreviewQuality()
@@ -386,7 +385,7 @@ class EditorVM @Inject constructor(application: Application,
 
     override fun loadSecondaryBmp() {
         try {
-            imgRepo.setSecondary(getApplication<Application>().applicationContext,null)
+            imgRepo.setSecondary(sL.getAppContext(this@EditorVM),null)
         }catch (oom:OutOfMemoryError){
             handleOOM("sec")
         }
@@ -394,7 +393,7 @@ class EditorVM @Inject constructor(application: Application,
 
     override fun loadReferenceBmp() {
         try{
-            imgRepo.setReference(getApplication<Application>().applicationContext,null)
+            imgRepo.setReference(sL.getAppContext(this@EditorVM),null)
         }catch (oom:OutOfMemoryError){
             handleOOM("ref")
         }
@@ -406,7 +405,9 @@ class EditorVM @Inject constructor(application: Application,
         }
     }
 
+
     companion object{
+
         private var processCount:AtomicInteger= AtomicInteger(0)
         @Volatile private var isPreviewPending:Boolean=false
 
