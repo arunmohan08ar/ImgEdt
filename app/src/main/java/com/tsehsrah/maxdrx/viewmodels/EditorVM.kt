@@ -62,6 +62,10 @@ class EditorVM @Inject constructor(application: Application,
     private var previewQuality     : Float                   = DEFAULT_PREVIEW_QUALITY
     private var autoPreview        : Boolean                 = true
     private val layerState         : ILayerStates            by lazy { sL.getNewLayerState() }
+    private var processCount       : AtomicInteger           = AtomicInteger(0)
+
+    @Volatile
+    private var isPreviewPending:Boolean=false
 
 
     private val _userHeadsUpString : MutableLiveData<String> = MutableLiveData(BLANK)
@@ -403,14 +407,6 @@ class EditorVM @Inject constructor(application: Application,
         if(vme!=null){
             handleOOM("from_process")
         }
-    }
-
-
-    companion object{
-
-        private var processCount:AtomicInteger= AtomicInteger(0)
-        @Volatile private var isPreviewPending:Boolean=false
-
     }
 
 }

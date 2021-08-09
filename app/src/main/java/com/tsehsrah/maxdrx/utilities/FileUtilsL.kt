@@ -86,7 +86,7 @@ object FileUtilsL : IImageFileUtilities {
             val ext=when(format){
                 Bitmap.CompressFormat.JPEG->".jpeg"
                 Bitmap.CompressFormat.WEBP->".webp"
-                else->"png"
+                else->".png"
             }
             val fileName = System.currentTimeMillis().toString() + ext
             val file = File(directory, fileName)
