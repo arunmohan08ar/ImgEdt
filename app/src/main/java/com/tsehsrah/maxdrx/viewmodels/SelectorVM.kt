@@ -20,7 +20,6 @@ import com.tsehsrah.maxdrx.repos.IImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.collect
 import java.io.IOException
 import javax.inject.Inject
@@ -56,13 +55,13 @@ class SelectorVM @Inject constructor(application: Application,
 
 
     init {
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             imgRepo.busyFlag.collect {
                 _repoBusy.postValue(it>0)
             }
         }
 
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             imgRepo.workDirectoryUpdated.collect{
                 it?.let {
                     updateSelectionList(it)
@@ -82,10 +81,10 @@ class SelectorVM @Inject constructor(application: Application,
         _reqAddImage.postValue(false)
     }
 
-    fun addNewWorkFilesk(uri: Uri){
+    fun addNewWorkFiles(uri: Uri){
         try{
             imgRepo.addNewWrkFiles(
-                getApplication<Application>().applicationContext,
+                sL.getAppContext(this@SelectorVM),
                 expectAt,
                 uri
             )
@@ -99,9 +98,9 @@ class SelectorVM @Inject constructor(application: Application,
     fun setCurrentPos(pos:Int?=null){
         try{
             pos?.let {
-                imgRepo.setCurrentPos(getApplication<Application>().applicationContext, pos,false)
+                imgRepo.setCurrentPos(sL.getAppContext(this@SelectorVM), pos,false)
                 _headsUpPreview.postValue(imageList[pos].thumpBmp)
-            } ?: imgRepo.setCurrentPos(getApplication<Application>().applicationContext,null,false)
+            } ?: imgRepo.setCurrentPos(sL.getAppContext(this@SelectorVM),null,false)
         }catch (oom:OutOfMemoryError){
             handleOOM("setP")
         }
@@ -113,7 +112,7 @@ class SelectorVM @Inject constructor(application: Application,
             return
         }
         try{
-            imgRepo.setReference(getApplication<Application>().applicationContext, pos)
+            imgRepo.setReference(sL.getAppContext(this@SelectorVM), pos)
         }catch (oom:OutOfMemoryError){
             handleOOM("setR")
         }
@@ -121,7 +120,7 @@ class SelectorVM @Inject constructor(application: Application,
     }
     fun setSecondaryPos(pos:Int){
         try{
-            imgRepo.setSecondary(getApplication<Application>().applicationContext,pos)
+            imgRepo.setSecondary(sL.getAppContext(this@SelectorVM),pos)
         }catch (oom:OutOfMemoryError){
             handleOOM("setS")
         }
@@ -129,10 +128,10 @@ class SelectorVM @Inject constructor(application: Application,
     }
 
     private fun updateSelectionList(at:Int= expectAt){
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             try {
                 val bmp = imgRepo.getBmp(
-                    getApplication<Application>().applicationContext,
+                    sL.getAppContext(this@SelectorVM),
                     at,
                     true
                 )
@@ -156,7 +155,7 @@ class SelectorVM @Inject constructor(application: Application,
         _imageSelectList.postValue(imageList)
         try {
             imgRepo.setCurrentPos(
-                getApplication<Application>().applicationContext,
+                sL.getAppContext(this@SelectorVM),
                 pos = null ,
                 forceReload = true
             )
@@ -175,13 +174,13 @@ class SelectorVM @Inject constructor(application: Application,
     fun deleteDataAt(at:Int){
         try{
             imgRepo.removeDataAt(
-                getApplication<Application>().applicationContext,
+                sL.getAppContext(this@SelectorVM),
                 at,
                 imageList.size - 1
             ) {
                 if (!it) {
                     _selectorHeadsUp.postValue(
-                        getApplication<Application>().applicationContext
+                        sL.getAppContext(this@SelectorVM)
                             .getString(R.string.req_app_restart)
                     )
                 } else {
@@ -191,7 +190,7 @@ class SelectorVM @Inject constructor(application: Application,
                 if (imageList.size == 0) {
                     try {
                         imgRepo.setCurrentPos(
-                            getApplication<Application>().applicationContext,
+                            sL.getAppContext(this@SelectorVM),
                             INVALID,
                             true
                         )
@@ -209,7 +208,7 @@ class SelectorVM @Inject constructor(application: Application,
 
     fun windUpAndClearAll(){
         try{
-            imgRepo.clearAllWorkData(getApplication<Application>().applicationContext)
+            imgRepo.clearAllWorkData(sL.getAppContext(this@SelectorVM))
         }catch (io:IOException){
             sL.getAnalytics().logEvent(FBEvent.OOM,description="clr",at = EventAt.SELECTOR_VM)
         }

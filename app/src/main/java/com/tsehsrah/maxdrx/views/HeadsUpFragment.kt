@@ -61,9 +61,9 @@ class HeadsUpFragment  : Fragment(R.layout.fragment_heads_up) {
         editorVM.layerParameters.observe(viewLifecycleOwner,{
             layerParameters=it
             val xy="${it.scrollX} , ${it.scrollY}"
-            binding.headsUpXy?.text=xy
-            binding.headsUpScale?.text=it.scale.toString()
-            binding.headsUpAngle?.text=it.angle.toString()
+            binding.headsUpXy.text=xy
+            binding.headsUpScale.text=it.scale.toString()
+            binding.headsUpAngle.text=it.angle.toString()
         })
         editorVM.activeLayer.observe(viewLifecycleOwner,{
             preview.setBackgroundColor(TRANSPARENT)

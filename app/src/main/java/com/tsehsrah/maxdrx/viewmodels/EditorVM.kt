@@ -36,7 +36,6 @@ import com.tsehsrah.maxdrx.utilities.IProcessMonitor
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -119,7 +118,7 @@ class EditorVM @Inject constructor(application: Application,
         operator= ImageOperatorFactory.getOperator(DEFAULT_TOOL_MODE)
         updatePreferences()
 
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             imgRepo.currentBmpSF.collect {
                 it?.let {
                     incProcessCount()
@@ -139,13 +138,13 @@ class EditorVM @Inject constructor(application: Application,
             }
             System.gc()
         }
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             toolsStatus.collect {
                 updatePreview()
             }
         }
 
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             imgRepo.secondaryImageSF.collect{bmp->
                 bmp?.let {
                     opParams.secondaryBmp = it
@@ -155,7 +154,7 @@ class EditorVM @Inject constructor(application: Application,
                 }
             }
         }
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             imgRepo.referenceImageSF.collect{bmp->
                 bmp?.let {
                     opParams.referenceBmp = it
@@ -166,7 +165,7 @@ class EditorVM @Inject constructor(application: Application,
                 }
             }
         }
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             referenceMode.collect {
                 opParams.referenceMode=it
                 if(it==ReferenceModes.INDEPENDENT){
@@ -199,7 +198,7 @@ class EditorVM @Inject constructor(application: Application,
 
     fun applyChanges(){
         if(loadingStatus.value<1) {
-            CoroutineScope(Dispatchers.Default).launch {
+            CoroutineScope(sL.getIODispatcher()).launch(sL.getDefaultDispatcher()) {
                 incProcessCount()
                 val time= measureTimeMillis {
                     opParams.noOfFreeCores=getCoreCount()
@@ -251,7 +250,7 @@ class EditorVM @Inject constructor(application: Application,
     fun requestImageSave(format:Bitmap.CompressFormat){
         if(loadingStatus.value<1) {
             opParams.primaryBmp?.let {
-                CoroutineScope(IO).launch {
+                CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
                     incProcessCount()
                     opParams.primaryBmp?.let {
                         try{
@@ -298,7 +297,7 @@ class EditorVM @Inject constructor(application: Application,
         opParams.renderQuality=previewQuality
     }
     private fun updatePreview(){
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getDefaultDispatcher()) {
             if(loadingStatus.value>0){
                 isPreviewPending=true
             }else {

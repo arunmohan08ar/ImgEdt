@@ -150,7 +150,7 @@ class ImagePreviewFragment  : Fragment(R.layout.fragment_image_preview) {
                         }
                     }else{
                         quadTapFlags=true
-                        CoroutineScope(IO).launch {
+                        CoroutineScope(sL.getIODispatcher()).launch {
                             delay(QUAD_TAP_DELAY)
                             quadTapFlags=false
                         }

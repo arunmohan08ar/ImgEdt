@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name="com.tsehsrah.maxdrx.views.HiltActivity"
+            android:exported="true"
+
+            />
+    </application>
+</manifest>

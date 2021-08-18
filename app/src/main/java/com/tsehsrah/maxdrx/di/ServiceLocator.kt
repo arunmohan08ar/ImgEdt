@@ -11,11 +11,16 @@ import com.tsehsrah.maxdrx.AdsManager
 import com.tsehsrah.maxdrx.Analytics
 import com.tsehsrah.maxdrx.models.*
 import com.tsehsrah.maxdrx.utilities.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 object ServiceLocator :IServiceLocator{
     //app
     override fun getAppContext(ctx:AndroidViewModel): Context        = ctx.getApplication<Application>()
                                                                         .applicationContext
+    override fun getIODispatcher(): CoroutineDispatcher = Dispatchers.IO
+    override fun getDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
 
     //Local
     override fun getItemImageSelectList()    : IItemImageSelectList  = ItemImageSelectList()

@@ -54,7 +54,7 @@ class ImageRepo constructor(private val sL:IServiceLocator) : IImageRepository  
             return
         }
         currentPos=at
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             _currentBmpSF.value = getBmp(ctx, at, false)
         }
     }
@@ -63,7 +63,7 @@ class ImageRepo constructor(private val sL:IServiceLocator) : IImageRepository  
         if(at!=null) {
             referencePos = at
         }
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             _referenceImageSF.value = getBmp(ctx, referencePos?: currentPos, false)
         }
     }
@@ -72,7 +72,7 @@ class ImageRepo constructor(private val sL:IServiceLocator) : IImageRepository  
         if(at!=null) {
             exposedPos = at
         }
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             _secondaryImageSF.value = getBmp(ctx, exposedPos, false)
         }
     }
@@ -82,7 +82,7 @@ class ImageRepo constructor(private val sL:IServiceLocator) : IImageRepository  
         if(workDirectoryUpdated.value==at){
             _workDirectoryUpdated.value=null
         }
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()) {
             incRunningProcessCount()
             val bmp = fileUtils.getImgFromURI  (uri, ctx)
             bmp?.let{
@@ -154,7 +154,7 @@ class ImageRepo constructor(private val sL:IServiceLocator) : IImageRepository  
 
     override fun removeDataAt(ctx: Context, at:Int, total:Int, finishedCallBack:(b:Boolean)->Unit){
         incRunningProcessCount()
-        CoroutineScope(IO).launch{
+        CoroutineScope(sL.getIODispatcher()).launch(sL.getIODispatcher()){
             if(fileUtils.removeWorkBmp(ctx, CONSTANTS.IMG_TMP_DIR, CONSTANTS.TEMP_IMG_NAME+at)){
                 fileUtils.removeWorkBmp(ctx, CONSTANTS.IMG_TMP_DIR, CONSTANTS.THUMP_IMG_NAME+at)
                 if(at!=total)

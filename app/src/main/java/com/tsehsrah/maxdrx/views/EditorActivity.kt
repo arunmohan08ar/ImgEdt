@@ -53,8 +53,8 @@ class EditorActivity : AppCompatActivity() {
     private val imgSelect:IImageSelectUtility by lazy { sL.getImageSelectUtilities() }
 
 
-    private val selectorVM: SelectorVM by viewModels()
-    private val editorVM: EditorVM by viewModels()
+    private val selectorVM : SelectorVM by viewModels()
+    private val editorVM   : EditorVM   by viewModels()
 
 
     private val resultLauncher =
@@ -62,13 +62,14 @@ class EditorActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 uri = result.data?.data
                 uri?.let {
-                    selectorVM.addNewWorkFilesk(it)
+                    selectorVM.addNewWorkFiles(it)
                 }
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_act_edtr)
         supportFragmentManager.fragmentFactory=fragFactory
         supportFragmentManager.commit {
@@ -155,7 +156,7 @@ class EditorActivity : AppCompatActivity() {
         }
     }
     private fun backPress(){
-        CoroutineScope(IO).launch {
+        CoroutineScope(sL.getIODispatcher()).launch {
             backPress=true
             delay(800)
             backPress=false
