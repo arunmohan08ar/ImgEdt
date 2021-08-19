@@ -2,7 +2,6 @@ package com.tsehsrah.maxdrx.di
 
 import com.tsehsrah.maxdrx.repos.IImageRepository
 import com.tsehsrah.maxdrx.repos.ImageRepo
-import com.tsehsrah.maxdrx.views.EditorFragmentFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,11 +14,6 @@ object AppModule {
     private fun getServiceLocator():IServiceLocator{
         return ServiceLocator
     }
-    @Provides
-    fun provideEditorFragmentFactory():EditorFragmentFactory{
-        return EditorFragmentFactory()
-    }
-
     @Provides
     fun provideServiceLocator():IServiceLocator{
         return getServiceLocator()
