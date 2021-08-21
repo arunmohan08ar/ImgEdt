@@ -32,8 +32,8 @@ enum class ImageOperators(val operator: IOperatorDescription) {
     )
 }
 
-object ImageOperatorFactory {
-    fun getOperator(mode: ImageOperators): IImageOperator {
+object ImageOperatorFactory :IImageOperatorFactory  {
+    override fun getOperator(mode: ImageOperators): IImageOperator {
         return when (mode) {
             ImageOperators.Binary -> {
                 BinaryOperator()

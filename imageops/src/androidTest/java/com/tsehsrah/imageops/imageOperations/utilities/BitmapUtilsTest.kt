@@ -5,7 +5,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tsehsrah.imageops.fakes.FakeOperationsManager
 import com.tsehsrah.imageops.imageOperations.configs.ReferenceModes
 import com.tsehsrah.imageops.imageOperations.models.*
-import com.tsehsrah.imageops.imageOperations.utilities.BitmapUtils.getScaledBmp
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert
@@ -13,28 +12,20 @@ import org.junit.Before
 
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-
-import org.mockito.MockitoAnnotations
 
 @RunWith(AndroidJUnit4::class)
 class BitmapUtilsTest{
     private val size=50
     private lateinit var bmp: Bitmap
     private lateinit var params: IOperationParameters
+    private lateinit var cache: ICache
 
-    @InjectMocks
     private val utilities : IBitmapUtilities = BitmapUtils
-
-    @InjectMocks
     private val manager :IOperationManager = FakeOperationsManager
-
-    @InjectMocks
-    private val cache: ICache =Cache
 
     @Before
     fun setup(){
-        MockitoAnnotations.initMocks(this)
+        cache = Cache
         bmp=Bitmap.createBitmap(size,size,Bitmap.Config.ARGB_8888)
         params=OperationParameters(manager)
 
@@ -52,13 +43,13 @@ class BitmapUtilsTest{
     @Test
     fun scaleTest(){
         val scale=3f
-        val rbmb= runBlocking { getScaledBmp(bmp,scale)}
+        val rbmb= runBlocking { utilities.getScaledBmp(bmp,scale)}
         Assert.assertEquals((size*scale).toInt(),rbmb.width)
     }
     @Test
     fun scaleTestDownScale(){
         val scale=.5f
-        val rbmb= runBlocking { getScaledBmp(bmp,scale)}
+        val rbmb= runBlocking { utilities.getScaledBmp(bmp,scale)}
         Assert.assertEquals((size*scale).toInt(),rbmb.width)
     }
 

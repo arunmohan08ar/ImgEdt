@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorAccent"
-    tools:context=".views.FragTools">
+    android:id="@+id/tools_fragment"
+    tools:context=".views.ToolsFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

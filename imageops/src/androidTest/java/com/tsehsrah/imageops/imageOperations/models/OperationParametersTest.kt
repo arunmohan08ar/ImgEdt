@@ -1,25 +1,24 @@
 package com.tsehsrah.imageops.imageOperations.models
 
 import android.graphics.Bitmap
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tsehsrah.imageops.fakes.FakeOperationsManager
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class OperationParametersTest{
 
-    @InjectMocks
-    private val manager:IOperationManager=FakeOperationsManager
-
+    private lateinit var manager:IOperationManager
     private lateinit var params:IOperationParameters
     private lateinit var pBmp: Bitmap
 
     @Before
     fun setup(){
-        MockitoAnnotations.initMocks(this)
+        manager=FakeOperationsManager
         params=OperationParameters(manager)
         pBmp = Bitmap.createBitmap(50,50,Bitmap.Config.ARGB_8888)
         params.primaryBmp=pBmp

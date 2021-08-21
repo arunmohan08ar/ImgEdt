@@ -1,4 +1,7 @@
 package com.tsehsrah.maxdrx.views
 
-class HiltActivity {
-}
+import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class HiltActivity:AppCompatActivity()

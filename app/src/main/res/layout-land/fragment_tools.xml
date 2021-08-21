@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorAccent"
-    tools:context=".views.FragTools">
+    android:id="@+id/tools_fragment"
+    tools:context=".views.ToolsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
 
     <SeekBar
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
-        android:text="Apply"
+        android:text="@string/apply"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/tools_up"
         app:layout_constraintEnd_toStartOf="@+id/tools_up"
@@ -67,7 +67,7 @@
         android:gravity="center"
         android:rotation="90"
         android:scaleY=".8"
-        android:text="   "
+        android:text="@string/blank"
         android:textAlignment="center"
         android:textColor="@android:color/darker_gray"
         android:textSize="16sp"

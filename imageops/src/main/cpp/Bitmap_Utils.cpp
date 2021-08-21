@@ -16,11 +16,11 @@ static inline void gt_Alpha(long &px,int &a){
 }
 
 static inline long get_Pixel(int &r,int &g,int &b,int &a){
-    return (((a&0xff) << 24 )| ((b&0xff)<< 16) | ((g&0xff)<< 8 ) | r&0xff);
+    return (((a&0xff) << 24 )| ((b&0xff)<< 16) | ((g&0xff)<< 8 ) | (r&0xff));
 }
 
 static inline long gt_PxlE(int v ,int a){
-    return (((a&0xff) << 24 )| ((v&0xff)<< 16) | ((v&0xff)<< 8 ) | v&0xff);
+    return (((a&0xff) << 24 )| ((v&0xff)<< 16) | ((v&0xff)<< 8 ) | (v&0xff));
 }
 static inline int getMeanWRA(int &r,int &g,int &b,int &a){
     return ((r+g+b)/3.0f)*(a/255.0f);
