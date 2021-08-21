@@ -27,8 +27,7 @@ class ImageSelectFragment : Fragment(R.layout.fragment_image_select) {
         val rtv  =inflater.inflate(R.layout.fragment_image_select, container, false)
         val adpt = ImageSelectListAdapter({pos -> imageSelected(pos)},{pos,v-> showOptionsPopup(pos,v)})
         selectorVM.imageSelectList.observe(viewLifecycleOwner,  { l ->
-            adpt.data = l
-            adpt.notifyDataSetChanged()
+            adpt.submitList( l.toList())
         })
         selectorVM.selectorHeadsUp.observe(viewLifecycleOwner,{
             it?.let {
