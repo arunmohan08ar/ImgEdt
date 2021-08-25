@@ -20,6 +20,5 @@ import org.junit.runners.Suite
     ImagePreviewFragmentTest::class,
     ImageSelectFragmentTest::class,
     ToolsFragmentTest::class
-
 )
-class AllSuit
+class AllUISuit
